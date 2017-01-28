@@ -1,12 +1,12 @@
 import pandas as pd
 from sklearn.model_selection import GridSearchCV
+
+from feature_extraction import FeatureExtractor
+from regressor import RandomForestClassifierAuc
 from tools import fitStats,featureImportance
 
-from feature_extractor import FeatureExtractor
-from regressor import RandomForestClassifierAuc
-
 test_df = pd.read_csv("./data/test.csv", delimiter=";", header=0, index_col=0);
-train_df = pd.read_csv("./data/train.csv", delimiter=";", header=0, index_col=0);
+train_df = pd.read_csv("./data/train_preprocessed.csv", delimiter=";", header=0, index_col=0);
 train_label = pd.read_csv("./data/label.csv",
                           delimiter=";", header=0, index_col=0);
 
@@ -32,7 +32,6 @@ if(studyAuc):
     fitStats(fit)
 else:
     featureImportance(fit,train_df)
-
 
 #y_test = fit.predict_proba(X_test)[:,1]
 # pred_label = pd.DataFrame(data={'Target': y_test},index=test_df.index)
