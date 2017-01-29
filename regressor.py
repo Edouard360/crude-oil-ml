@@ -1,9 +1,10 @@
 from sklearn.base import ClassifierMixin, BaseEstimator
 from sklearn.exceptions import NotFittedError
-from sklearn.metrics import roc_auc_score
-from sklearn.ensemble import RandomForestClassifier
 import xgboost as xgb
 import numpy as np
+
+from sklearn.metrics import roc_auc_score
+from sklearn.ensemble import RandomForestClassifier
 
 class ClassifierMixinAuc(ClassifierMixin):
     def score(self, X, y, sample_weight=None):

@@ -1,7 +1,8 @@
 import pandas as pd
 from tools import get_suffix
 
-def getFirstValue(X_df,suffix_feature):
+
+def getFirstValue(X_df, suffix_feature):
     valuesSumImport = X_df[get_suffix(suffix_feature, 1)[0]].unique()
 
     # The loop below finds the only unique value of valuesSumImport that doesn't
@@ -11,7 +12,8 @@ def getFirstValue(X_df,suffix_feature):
         if (sum(X_df[get_suffix(suffix_feature, 2)[0]] == value) == 0):
             return value
 
-def computePeriod(X_df, orderedValues,suffix_feature = "SumImports"):
+
+def computePeriod(X_df, orderedValues, suffix_feature="SumImports"):
     """
     There are 134 different periods in this dataset.
     We can see that taking any of the SumSomething statistics.
@@ -27,8 +29,8 @@ def computePeriod(X_df, orderedValues,suffix_feature = "SumImports"):
     # We find the value for the following periods by considering
     # that for any entry: the value of 1_diffSumImports(kmt) for
     # the next period is in 2_diffSumImports(kmt) at time t.
-    if(len(orderedValues)==0):
-        orderedValues+=[getFirstValue(X_df,suffix_feature)]
+    if (len(orderedValues) == 0):
+        orderedValues += [getFirstValue(X_df, suffix_feature)]
     for columnNumber in [1, 11]:
         while True:
             prev_value = orderedValues[-1]
