@@ -22,3 +22,4 @@ def featureImportance(fit, train_df):
     print(fit.feature_importances_[sorted_importance])
     print("Importance ranked features:")
     print(train_df.columns[sorted_importance])
+

@@ -3,11 +3,12 @@ import numpy as np
 from sklearn.base import TransformerMixin
 from sklearn.ensemble import RandomForestClassifier
 
-from tools import get_suffix, get_prefix
+from tools import get_suffix, get_prefix, except_suffix
 from .country_types import computeCountryType, computeCategory, computeMeanCountry
-from .mean_target import computeMeanTarget
+from .mean_target import computeMeanTarget, computeMeanMonth
 from .time_period import computePeriod
 from .merge_df import mergeDf
+from .variance import createFeature
 
 
 class FeatureExtractor(TransformerMixin):
@@ -19,6 +20,7 @@ class FeatureExtractor(TransformerMixin):
 
     def fit(self, X_df, y):
         self.registerEngineeredFeatures(computeMeanTarget(X_df, y), "meanTarget")
+        self.registerEngineeredFeatures(computeMeanMonth(X_df, y), "monthTarget",left_on='month')
         #self.registerEngineeredFeatures(computeMeanCountry(X_df, y), "meanCountry")
         self.computePrePred = self.computePrePred(y)
         return self
@@ -43,6 +45,13 @@ class FeatureExtractor(TransformerMixin):
                                         left_on=get_suffix("SumImports", 1))
         for engineered_df in self.engineered_df.values():
             X_df = mergeDf(X_df, engineered_df)
-        X_df = X_df.ix[:, get_prefix(12) + self.engineered_features]
-        X_df = self.computePrePred(X_df)
+
+        X_df = createFeature(X_df,self.engineered_features)
+        # X_df = X_df.ix[:, get_prefix(12) + self.engineered_features]
+        X_df = X_df.ix[:,  get_suffix('sumprod',[11,12])+get_suffix(["exports",'refinery'],[10,11,12])+ self.engineered_features]
+        #X_df = X_df.ix[:, except_suffix(['wti','sumclosing','refinery'],12) + get_suffix(["exports","refinery"],11) + self.engineered_features]
+        #X_df = X_df.ix[:, get_prefix(12) + get_suffix(["exports", "refinery"],11) + self.engineered_features]
+
+        #X_df = X_df.ix[:, get_suffix(["exports","refinery","sumImports"],[11,12])+ self.engineered_features]
+        #X_df = self.computePrePred(X_df)
         return X_df

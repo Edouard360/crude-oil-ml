@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.model_selection import GridSearchCV
 
 from feature_extraction import FeatureExtractor
-from regressor import RandomForestClassifierAuc
+from regressor import RandomForestClassifierAuc,XGBRegressor
 from tools import fitStats,featureImportance
 
 test_df = pd.read_csv("./data/test.csv", delimiter=";", header=0, index_col=0);
@@ -19,6 +19,7 @@ param_grid = dict(max_depth=[10], n_estimators=[15])
 studyAuc = True
 if(studyAuc):
     reg = GridSearchCV(RandomForestClassifierAuc(max_depth=10, n_estimators=15), param_grid=param_grid)
+    reg = GridSearchCV(XGBRegressor(), param_grid=dict())
 else:
     reg = RandomForestClassifierAuc(max_depth=10, n_estimators=15)
 
@@ -30,9 +31,11 @@ fit = reg.fit(X_train, y_train)
 
 if(studyAuc):
     fitStats(fit)
+    featureImportance(fit.best_estimator_, train_df)
 else:
     featureImportance(fit,train_df)
 
-#y_test = fit.predict_proba(X_test)[:,1]
+
+# y_test = fit.predict_proba(X_test)[:,1]
 # pred_label = pd.DataFrame(data={'Target': y_test},index=test_df.index)
-# pred_label.to_csv("./output/label3.csv",sep=";",quotechar="\"",quoting=2)
+# pred_label.to_csv("./output/label4.csv",sep=";",quotechar="\"",quoting=2)

@@ -37,3 +37,16 @@ def get_suffix(suffix_request, prefix=range(1, 13)):
                 break
     suffix_request = list(set(suffix_request))
     return [str(j) + suffix for j in prefix for suffix in suffix_request]
+
+def except_suffix(suffix_request, prefix=range(1, 13)):
+    prefix = check_type_prefix(prefix)
+    suffix_request = check_type_suffix(suffix_request)
+    columns_copy = list(COLUMNS_SUFFIX)
+    for i in range(len(suffix_request)):
+        for original_suffix in columns_copy:
+            if (str.lower(original_suffix).find(str.lower(suffix_request[i])) != -1):
+                if original_suffix in columns_copy:
+                    columns_copy.remove(original_suffix)
+                    break;
+
+    return [str(j) + suffix for j in prefix for suffix in columns_copy]
